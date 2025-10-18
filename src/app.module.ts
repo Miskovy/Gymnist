@@ -3,9 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
+//import { UserModule } from './user/user.module';
+//import { AuthModule } from './auth/auth.module';
 import { TrainerModule } from './trainer/trainer.module';
+import { TraineeModule } from './trainee/trainee.module';
+import { PaymentMethodModule } from './payment-method/payment-method.module';
+import { PackageModule } from './package/package.module';
 
 
 @Module({
@@ -28,9 +31,12 @@ import { TrainerModule } from './trainer/trainer.module';
         synchronize: true,
       }),
     }),
-    UserModule,
-    AuthModule,
-    TrainerModule
+   // UserModule,
+   // AuthModule,
+    TrainerModule,
+    TraineeModule,
+    PaymentMethodModule,
+    PackageModule
   ],
   controllers: [AppController],
   providers: [AppService],
