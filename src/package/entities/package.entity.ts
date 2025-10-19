@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 import { PaymentMethod } from '../../payment-method/entities/payment-method.entity';
 
-@Entity('Package')
+@Entity('package')
 export class Package {
   @PrimaryGeneratedColumn()
   id: number;
