@@ -3,12 +3,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-//import { UserModule } from './user/user.module';
-//import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import { TrainerModule } from './trainer/trainer.module';
 import { TraineeModule } from './trainee/trainee.module';
 import { PaymentMethodModule } from './payment-method/payment-method.module';
 import { PackageModule } from './package/package.module';
+import { LocationModule } from './location/location.module';
+import { MajorModule } from './major/major.module';
+import { SubscriptionModule } from './subscription/subscription.module';
+import { PaymentModule } from './payment/payment.module';
+import { BookingModule } from './booking/booking.module';
+import { DiscountModule } from './discount/discount.module';
+import { RoomModule } from './room/room.module';
+import { RentModule } from './rent/rent.module';
+import { CurrencyModule } from './currency/currency.module';
+import { GallaryModule } from './gallary/gallary.module';
+import { AttendanceModule } from './attendance/attendance.module';
 
 
 @Module({
@@ -31,12 +42,23 @@ import { PackageModule } from './package/package.module';
         synchronize: true,
       }),
     }),
-   // UserModule,
-   // AuthModule,
+    UserModule,
+    AuthModule,
     TrainerModule,
     TraineeModule,
     PaymentMethodModule,
-    PackageModule
+    PackageModule,
+    LocationModule,
+    MajorModule,
+    SubscriptionModule,
+    PaymentModule,
+    BookingModule,
+    DiscountModule,
+    RoomModule,
+    RentModule,
+    CurrencyModule,
+    GallaryModule,
+    AttendanceModule
   ],
   controllers: [AppController],
   providers: [AppService],
