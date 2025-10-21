@@ -9,17 +9,14 @@ export class Room {
   @Column()
   name: string;
 
-  @Column()
-  image?: string;
-
-  @Column({ name: 'gallery_id' })
-  galleryId: number;
-
   @Column({ default: 0 })
   capacity: number;
 
   @Column({ type: 'text', nullable: true })
   description?: string;
+
+  @Column({ type: 'text', nullable: true })
+  thumbnail?: string;
 
   @OneToMany(() => RoomGallery, gallery => gallery.room)
   gallery: RoomGallery[];

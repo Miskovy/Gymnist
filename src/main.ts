@@ -14,6 +14,10 @@ async function bootstrap() {
   }));
   app.useGlobalInterceptors(new ResponseInterceptor(new Reflector()));
 
+  
+  app.use(require('body-parser').json({ limit: '50mb' }));
+  app.use(require('body-parser').urlencoded({ limit: '50mb', extended: true }));
+
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/',
   });
