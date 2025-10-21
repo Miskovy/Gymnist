@@ -14,6 +14,11 @@ export class TraineeController {
     return this.traineeService.create(createTraineeDto);
   }
 
+  @Post('scan')
+  scanQRCode(@Body('qrCode') qrCode: string) {
+    return this.traineeService.scanQRCode(qrCode);
+  }
+
   @Get()
   findAll() {
     return this.traineeService.findAll();

@@ -44,7 +44,7 @@ export class Trainee {
   qrCode: string;
 
   @Column({ name: 'image_url', nullable: true })
-  imageUrl?: string;
+  image?: string;
 
   @Column({ name: 'last_attendance', type: 'timestamp', nullable: true })
   lastAttendance?: Date;
