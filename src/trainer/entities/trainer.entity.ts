@@ -44,7 +44,10 @@ export class Trainer {
   qrCode: string;
 
   @Column({ name: 'image_url', nullable: true })
-  imageUrl?: string;
+  image?: string;
+
+  @Column({ nullable: true })
+  lastAttendance: Date;
 
   @CreateDateColumn()
   createdAt: Date;

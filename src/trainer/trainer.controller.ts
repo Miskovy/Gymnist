@@ -8,27 +8,32 @@ export class TrainerController {
   constructor(private readonly trainerService: TrainerService) {}
 
   @Post()
-  create(@Body() createTrainerDto: CreateTrainerDto) {
+  async create(@Body() createTrainerDto: CreateTrainerDto) {
     return this.trainerService.create(createTrainerDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.trainerService.findAll();
   }
 
-   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
     return this.trainerService.findOne(+id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateTrainerDto: UpdateTrainerDto) {
+  async update(@Param('id') id: string, @Body() updateTrainerDto: UpdateTrainerDto) {
     return this.trainerService.update(+id, updateTrainerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.trainerService.remove(+id);
+  }
+
+  @Post('scan')
+  async scanQRCode(@Body('qrCode') qrCode: string) {
+    return this.trainerService.scanQRCode(qrCode);
   }
 }

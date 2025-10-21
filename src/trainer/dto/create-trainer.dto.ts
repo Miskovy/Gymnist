@@ -33,7 +33,7 @@ export class CreateTrainerDto {
   nationality: string;
 
   @IsString()
-  imageUrl: string;
+  image: string;
 
 }
 
