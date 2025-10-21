@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { PaymentMethod } from './entities/payment-method.entity';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
 import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto';
+import { saveBase64Image } from '../utils/saveBase64Image';
 
 @Injectable()
 export class PaymentMethodService {
@@ -13,8 +14,18 @@ export class PaymentMethodService {
   ) {}
 
   async create(createPaymentMethodDto: CreatePaymentMethodDto): Promise<PaymentMethod> {
+
+     let imageUrl = null;
+    if (createPaymentMethodDto.image) {
+      imageUrl = await saveBase64Image(
+        createPaymentMethodDto.image, 
+        `PaymentMethod-${Date.now()}.jpg`, 
+        'Payment-Method'
+      );
+    }
     const paymentMethod = this.paymentMethodRepository.create({
       ...createPaymentMethodDto,
+      image: imageUrl,
       isActive: createPaymentMethodDto.isActive ?? true,
     });
     return this.paymentMethodRepository.save(paymentMethod);
