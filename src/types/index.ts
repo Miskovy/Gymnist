@@ -7,14 +7,13 @@ export interface AuthRequest extends Request {
   };
 }
 
-// Common model interfaces
 export interface BaseModel {
   id: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// User related interfaces
+
 export interface User extends BaseModel {
   name: string;
   email: string;
@@ -23,21 +22,22 @@ export interface User extends BaseModel {
   isActive: boolean;
 }
 
-// Trainee related interfaces
+
 export interface Trainee extends BaseModel {
   name: string;
   phone: string;
   email?: string;
+  password?: string;
   gender?: string;
   birthDate?: Date;
   age?: number;
   qrCode?: string;
+  barCode?: string;
   image?: string;
   countryId?: number;
   cityId?: number;
   stateId?: number;
   nationality?: string;
-  isActive: boolean;
 }
 
 // Trainer related interfaces
@@ -45,15 +45,17 @@ export interface Trainer extends BaseModel {
   name: string;
   phone: string;
   email?: string;
+  password: string;
   gender?: string;
   birthDate?: Date;
   age?: number;
   qrCode?: string;
+  barCode?: string;
   image?: string;
   countryId?: number;
   cityId?: number;
   stateId?: number;
   nationality?: string;
-  isActive: boolean;
   majorId?: number;
+  lastAttendance?: Date;
 }

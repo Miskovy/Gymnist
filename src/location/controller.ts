@@ -32,6 +32,35 @@ export const createCountry = async (req: Request, res: Response) => {
   }
 };
 
+export const updateCountry = async (req: Request, res: Response) => {
+  try {
+    const [updated] = await Country.update(req.body, {
+      where: { id: req.params.id }
+    });
+    if (updated === 0) {
+      return res.status(404).json({ message: 'Country not found' });
+    }
+    const updatedCountry = await Country.findByPk(req.params.id);
+    return res.status(200).json(updatedCountry);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating country', error });
+  }
+};
+
+export const deleteCountry = async (req: Request, res: Response) => {
+  try {
+    const deleted = await Country.destroy({
+      where: { id: req.params.id }
+    });
+    if (deleted === 0) {
+      return res.status(404).json({ message: 'Country not found' });
+    }
+    return res.status(200).json({ message: 'Country deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting country', error });
+  }
+};
+
 // City Controllers
 export const getAllCities = async (req: Request, res: Response) => {
   try {
@@ -67,6 +96,37 @@ export const createCity = async (req: Request, res: Response) => {
   }
 };
 
+export const updateCity = async (req: Request, res: Response) => {
+  try {
+    const [updated] = await City.update(req.body, {
+      where: { id: req.params.id }
+    });
+    if (updated === 0) {
+      return res.status(404).json({ message: 'City not found' });
+    }
+    const updatedCity = await City.findByPk(req.params.id, {
+      include: [{ model: Country }]
+    });
+    return res.status(200).json(updatedCity);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating city', error });
+  }
+};
+
+export const deleteCity = async (req: Request, res: Response) => {
+  try {
+    const deleted = await City.destroy({
+      where: { id: req.params.id }
+    });
+    if (deleted === 0) {
+      return res.status(404).json({ message: 'City not found' });
+    }
+    return res.status(200).json({ message: 'City deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting city', error });
+  }
+};
+
 // State Controllers
 export const getAllStates = async (req: Request, res: Response) => {
   try {
@@ -99,5 +159,36 @@ export const createState = async (req: Request, res: Response) => {
     return res.status(201).json(state);
   } catch (error) {
     return res.status(500).json({ message: 'Error creating state', error });
+  }
+};
+
+export const updateState = async (req: Request, res: Response) => {
+  try {
+    const [updated] = await State.update(req.body, {
+      where: { id: req.params.id }
+    });
+    if (updated === 0) {
+      return res.status(404).json({ message: 'State not found' });
+    }
+    const updatedState = await State.findByPk(req.params.id, {
+      include: [{ model: City, include: [{ model: Country }] }]
+    });
+    return res.status(200).json(updatedState);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating state', error });
+  }
+};
+
+export const deleteState = async (req: Request, res: Response) => {
+  try {
+    const deleted = await State.destroy({
+      where: { id: req.params.id }
+    });
+    if (deleted === 0) {
+      return res.status(404).json({ message: 'State not found' });
+    }
+    return res.status(200).json({ message: 'State deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting state', error });
   }
 };

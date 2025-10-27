@@ -1,7 +1,8 @@
+import { PaymentMethod } from "./payment-method";
+
 export interface Package {
   id: number;
   name: string;
-  numOfMembers: number;
   maxEntranceCount: number;
   description: string;
   image?: string;
@@ -12,6 +13,9 @@ export interface Package {
   priceQuarterly: number;
   priceSemiAnnually: number;
   priceAnnually: number;
+
+  paymentMethod?: PaymentMethod;
+
   createdAt?: Date;
   updatedAt?: Date;
 }

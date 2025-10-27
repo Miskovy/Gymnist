@@ -83,7 +83,6 @@ RoomGalleryModel.init(
   }
 );
 
-// Define associations
 RoomModel.hasMany(RoomGalleryModel, { foreignKey: 'roomId' });
 RoomGalleryModel.belongsTo(RoomModel, { foreignKey: 'roomId' });
 

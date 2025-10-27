@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', subscriptionController.getAllSubscriptions);
 router.get('/:id', subscriptionController.getSubscriptionById);
 router.post('/', validateSubscription, validate, subscriptionController.createSubscription);
-router.put('/:id', validateSubscription, validate, subscriptionController.updateSubscription);
+router.put('/:id', subscriptionController.updateSubscription);
 router.delete('/:id', subscriptionController.deleteSubscription);
 
 export default router;

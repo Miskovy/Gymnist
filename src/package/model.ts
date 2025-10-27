@@ -1,19 +1,19 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, Optional, ForeignKey, Association } from 'sequelize';
 import sequelize from '../config/database';
 import { Package } from '../types/package';
+import PaymentMethodModel from '../payment-method/model'; 
 
 interface PackageCreationAttributes extends Optional<Package, 'id' | 'createdAt' | 'updatedAt'> {}
 
 export class PackageModel extends Model<Package, PackageCreationAttributes> implements Package {
   public id!: number;
   public name!: string;
-  public numOfMembers!: number;
   public maxEntranceCount!: number;
   public description!: string;
   public image?: string;
   public startDate!: Date;
   public endDate!: Date;
-  public paymentMethodId!: number;
+  public paymentMethodId!: ForeignKey<number>;
   public priceMonthly!: number;
   public priceQuarterly!: number;
   public priceSemiAnnually!: number;
@@ -21,6 +21,12 @@ export class PackageModel extends Model<Package, PackageCreationAttributes> impl
   
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  public readonly paymentMethod?: PaymentMethodModel;
+
+  public static associations: {
+    paymentMethod: Association<PackageModel, PaymentMethodModel>;
+  };
 }
 
 PackageModel.init(
@@ -33,11 +39,6 @@ PackageModel.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    numOfMembers: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-      field: 'num_of_members',
     },
     maxEntranceCount: {
       type: DataTypes.INTEGER,
@@ -66,6 +67,12 @@ PackageModel.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       field: 'payment_method_id',
+      references: {
+        model: 'payment_methods',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'RESTRICT',
     },
     priceMonthly: {
       type: DataTypes.FLOAT,
@@ -94,5 +101,10 @@ PackageModel.init(
     timestamps: true,
   }
 );
+
+PackageModel.belongsTo(PaymentMethodModel, {
+  foreignKey: 'paymentMethodId',
+  as: 'paymentMethod',
+});
 
 export default PackageModel;

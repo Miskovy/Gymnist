@@ -2,13 +2,17 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 import { Trainee } from '../types/trainee';
 
-interface TraineeCreationAttributes extends Optional<Trainee, 'id'> {}
+interface TraineeCreationAttributes extends Optional<Trainee, 'id' | 'createdAt' | 'updatedAt'> {}
 
 class TraineeModel extends Model<Trainee, TraineeCreationAttributes> implements Trainee {
   public id!: number;
   public name!: string;
   public phone!: string;
   public email?: string;
+  public password?: string;
+  public qrCode?: string;
+  public image?: string;
+  public barCode?: string;
   public gender?: string;
   public birthDate?: Date;
   public age?: number;
@@ -16,8 +20,10 @@ class TraineeModel extends Model<Trainee, TraineeCreationAttributes> implements 
   public cityId?: number;
   public stateId?: number;
   public nationality?: string;
-  public createdAt!: Date;
-  public updatedAt!: Date;
+  public lastAttendance?: Date;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
 TraineeModel.init(
@@ -36,6 +42,22 @@ TraineeModel.init(
           allowNull: false,
       },
       email: {
+          type: DataTypes.STRING,
+          allowNull: true,
+      },
+      password: {
+          type: DataTypes.STRING,
+          allowNull: true,
+      },
+      qrCode: {
+          type: DataTypes.STRING,
+          allowNull: true,
+      },
+      image: {
+          type: DataTypes.STRING,
+          allowNull: true,
+      },
+      barCode: {
           type: DataTypes.STRING,
           allowNull: true,
       },
@@ -67,8 +89,20 @@ TraineeModel.init(
           type: DataTypes.STRING,
           allowNull: true,
       },
-      createdAt: '',
-      updatedAt: ''
+      lastAttendance: {
+          type: DataTypes.DATE,
+          allowNull: true,
+      },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,

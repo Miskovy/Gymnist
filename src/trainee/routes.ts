@@ -13,6 +13,9 @@ router.get('/:id', validator.validateTraineeId, validator.handleValidationErrors
 // Create new trainee
 router.post('/', validator.validateTraineeCreation, validator.handleValidationErrors, traineeController.createTrainee);
 
+// scan trainee
+router.post('/scan', traineeController.scanQRCode);
+
 // Update trainee
 router.put('/:id', validator.validateTraineeUpdate, validator.handleValidationErrors, traineeController.updateTrainee);
 

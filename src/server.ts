@@ -10,12 +10,18 @@ const PORT = process.env.PORT || 3000;
 
 // Test database connection
 sequelize.authenticate()
+
   .then(() => {
     console.log('Database connection established successfully.');
   })
   .catch((err: Error) => {
     console.error('Unable to connect to the database:', err);
   });
+
+ sequelize.sync(
+  {alter: true}
+ );
+  
 
 // Start server
 app.listen(PORT, () => {

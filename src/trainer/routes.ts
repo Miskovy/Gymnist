@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/', trainerController.getAllTrainers);
 router.get('/:id', validator.validateTrainerId, validator.handleValidationErrors, trainerController.getTrainerById);
 router.post('/', validator.validateTrainerCreation, validator.handleValidationErrors, trainerController.createTrainer);
+router.post('/scan', trainerController.scanQRCode);
 router.put('/:id', validator.validateTrainerUpdate, validator.handleValidationErrors, trainerController.updateTrainer);
 router.delete('/:id', validator.validateTrainerId, validator.handleValidationErrors, trainerController.deleteTrainer);
 
