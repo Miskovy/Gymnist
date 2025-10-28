@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 import { Class, ClassSchedule, TrainerClass, Booking } from '../types/class';
 import TrainerModel from '../trainer/model';
+import TraineeModel from '../trainee/model';
 
 
 interface ClassCreationAttributes extends Optional<Class, 'id' | 'createdAt' | 'updatedAt'> {}
@@ -228,35 +229,62 @@ BookingModel.init(
   }
 );
 
+ ClassModel.hasMany(ClassScheduleModel, { 
+    foreignKey: 'classId',
+    as: 'schedules' 
+  });
+  ClassScheduleModel.belongsTo(ClassModel, { 
+    foreignKey: 'classId',
+    as: 'class' 
+  });
 
-ClassModel.hasMany(ClassScheduleModel, { 
-  foreignKey: 'classId',
-  as: 'schedules' 
-});
-ClassScheduleModel.belongsTo(ClassModel, { 
-  foreignKey: 'classId',
-  as: 'class' 
-});
+  // Class - Trainer (Many-to-Many through TrainerClass)
+  ClassModel.belongsToMany(TrainerModel, {
+    through: TrainerClassModel,
+    foreignKey: 'classId',
+    otherKey: 'trainerId',
+    as: 'trainers'
+  });
+  
+  TrainerModel.belongsToMany(ClassModel, {
+    through: TrainerClassModel,
+    foreignKey: 'trainerId',
+    otherKey: 'classId',
+    as: 'classes'
+  });
 
+  // TrainerClass associations
+  TrainerClassModel.belongsTo(ClassModel, { 
+    foreignKey: 'classId',
+    as: 'class' 
+  });
 
-TrainerClassModel.belongsTo(ClassModel, { 
-  foreignKey: 'classId',
-  as: 'class' 
-});
+  TrainerClassModel.belongsTo(TrainerModel, { 
+    foreignKey: 'trainerId',
+    as: 'trainer' 
+  });
 
-TrainerClassModel.belongsTo(TrainerModel, { 
-  foreignKey: 'trainerId',
-  as: 'trainer' 
-});
+  // ClassSchedule - Booking (One-to-Many)
+  ClassScheduleModel.hasMany(BookingModel, { 
+    foreignKey: 'classScheduleId',
+    as: 'bookings' 
+  });
+  
+  BookingModel.belongsTo(ClassScheduleModel, { 
+    foreignKey: 'classScheduleId',
+    as: 'schedule' 
+  });
 
+  // Booking - Trainee (Many-to-One)
+  BookingModel.belongsTo(TraineeModel, {
+    foreignKey: 'traineeId',
+    as: 'trainee'
+  });
+  
+  TraineeModel.hasMany(BookingModel, {
+    foreignKey: 'traineeId',
+    as: 'bookings'
+  });
 
-ClassScheduleModel.hasMany(BookingModel, { 
-  foreignKey: 'classScheduleId',
-  as: 'bookings' 
-});
-BookingModel.belongsTo(ClassScheduleModel, { 
-  foreignKey: 'classScheduleId',
-  as: 'schedule' 
-});
 
 export { ClassModel, ClassScheduleModel, TrainerClassModel, BookingModel };

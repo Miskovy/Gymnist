@@ -1,8 +1,9 @@
-import { DataTypes, Model, Optional, Association } from 'sequelize';
+import { DataTypes, Model, Optional, Association, Sequelize } from 'sequelize';
 import sequelize from '../config/database';
 import { Trainer } from '../types/trainer';
 import MajorModel from '../major/model';
 import TrainerMajorModel from '../trainer/trainer-major.model';
+import { CityModel, CountryModel, StateModel } from '../location/model';
 
 interface TrainerCreationAttributes extends Optional<Trainer, 'id' | 'createdAt' | 'updatedAt'> {}
 
@@ -87,16 +88,28 @@ TrainerModel.init(
     countryId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: CountryModel,
+        key: 'id',
+      },
       field: 'country_id',
     },
     cityId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: CityModel,
+        key: 'id',
+      },
       field: 'city_id',
     },
     stateId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: StateModel,
+        key: 'id',
+      },
       field: 'state_id',
     },
     nationality: {
@@ -108,17 +121,17 @@ TrainerModel.init(
       allowNull: true,
       field: 'last_attendance',
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-      field: 'created_at',
-    },
+   createdAt: {
+  type: DataTypes.DATE,
+  allowNull: false,
+  defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+  field: 'created_at',
+  },
     updatedAt: {
-      type: DataTypes.DATE,
+       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW,
-      field: 'updated_at',
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'created_at',
     },
   },
   {
@@ -127,6 +140,21 @@ TrainerModel.init(
     timestamps: true,
   }
 );
+
+TrainerModel.belongsTo(CountryModel, {
+  foreignKey: 'countryId',
+  as: 'country'
+});
+
+TrainerModel.belongsTo(StateModel, {
+  foreignKey: 'stateId', 
+  as: 'state'
+});
+
+TrainerModel.belongsTo(CityModel, {
+  foreignKey: 'cityId',
+  as: 'city'
+});
 
 TrainerModel.belongsToMany(MajorModel, {
   through: TrainerMajorModel,

@@ -4,6 +4,14 @@ import * as validator from './validator';
 
 const router = express.Router();
 
+router.get(
+  '/calendar/:classId?/:trainerId?', 
+  validator.validateCalendarParams,
+  validator.handleValidationErrors,
+  classController.getClassCalendar
+);
+
+
 // Class routes
 router.get('/', classController.getAllClasses);
 router.get('/:id', validator.validateClassId, validator.handleValidationErrors, classController.getClassById);
@@ -21,6 +29,4 @@ router.post('/:classId/schedules', validator.validateScheduleCreation, validator
 router.post('/bookings', validator.validateBookingCreation, validator.handleValidationErrors, classController.createBooking);
 
 // Calendar routes
-router.get('/calendar', validator.validateCalendarQuery, validator.handleValidationErrors, classController.getClassCalendar);
-
 export default router;

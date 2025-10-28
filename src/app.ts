@@ -12,7 +12,7 @@ import paymentMethodRoutes from './payment-method/routes';
 import classRoutes from './class/routes';
 import subscriptionRoutes from './subscription/routes';
 import majorRoutes from './major/routes';
-//import roomRoutes from './room/routes';
+import roomRoutes from './room/routes';
 
 const app: Express = express();
 
@@ -33,7 +33,7 @@ app.use('/api/payment-methods', paymentMethodRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/majors', majorRoutes);
-//app.use('/api/rooms', roomRoutes);
+app.use('/api/rooms', roomRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

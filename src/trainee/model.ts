@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 import { Trainee } from '../types/trainee';
+import { CityModel, CountryModel, StateModel } from '../location/model';
 
 interface TraineeCreationAttributes extends Optional<Trainee, 'id' | 'createdAt' | 'updatedAt'> {}
 
@@ -62,7 +63,7 @@ TraineeModel.init(
           allowNull: true,
       },
       gender: {
-          type: DataTypes.ENUM('male', 'female', 'other'),
+          type: DataTypes.ENUM('male', 'female'),
           allowNull: true,
       },
       birthDate: {
@@ -73,18 +74,33 @@ TraineeModel.init(
           type: DataTypes.INTEGER,
           allowNull: true,
       },
-      countryId: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-      },
-      cityId: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-      },
-      stateId: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-      },
+       countryId: {
+             type: DataTypes.INTEGER,
+             allowNull: true,
+             references: {
+               model: CountryModel,
+               key: 'id',
+             },
+             field: 'country_id',
+           },
+           cityId: {
+             type: DataTypes.INTEGER,
+             allowNull: true,
+             references: {
+               model: CityModel,
+               key: 'id',
+             },
+             field: 'city_id',
+           },
+           stateId: {
+             type: DataTypes.INTEGER,
+             allowNull: true,
+             references: {
+               model: StateModel,
+               key: 'id',
+             },
+               field: 'state_id',
+            },
       nationality: {
           type: DataTypes.STRING,
           allowNull: true,
@@ -110,5 +126,20 @@ TraineeModel.init(
     timestamps: true,
   }
 );
+
+TraineeModel.belongsTo(CountryModel, {
+  foreignKey: 'countryId',
+  as: 'country'
+});
+
+TraineeModel.belongsTo(StateModel, {
+  foreignKey: 'stateId', 
+  as: 'state'
+});
+
+TraineeModel.belongsTo(CityModel, {
+  foreignKey: 'cityId',
+  as: 'city'
+});
 
 export default TraineeModel;

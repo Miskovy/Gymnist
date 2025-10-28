@@ -42,9 +42,16 @@ export const validateBookingCreation = [
   body('paymentMethod').notEmpty().withMessage('Payment method is required')
 ];
 
-export const validateCalendarQuery = [
-  query('classId').optional().isInt().withMessage('Class ID must be an integer'),
-  query('trainerId').optional().isInt().withMessage('Trainer ID must be an integer')
+export const validateCalendarParams = [
+  param('classId')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Class ID must be a positive integer'),
+  
+  param('trainerId')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Trainer ID must be a positive integer')
 ];
 
 export const handleValidationErrors = (req: Request, res: Response, next: NextFunction) => {

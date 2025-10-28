@@ -83,7 +83,13 @@ RoomGalleryModel.init(
   }
 );
 
-RoomModel.hasMany(RoomGalleryModel, { foreignKey: 'roomId' });
-RoomGalleryModel.belongsTo(RoomModel, { foreignKey: 'roomId' });
+RoomModel.hasMany(RoomGalleryModel, { 
+  foreignKey: 'roomId',
+  as: 'gallery'
+});
 
+RoomGalleryModel.belongsTo(RoomModel, { 
+  foreignKey: 'roomId',
+  as: 'room'
+});
 export { RoomModel as Room, RoomGalleryModel as RoomGallery };

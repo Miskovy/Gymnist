@@ -4,14 +4,34 @@ import Trainee from './model';
 import QRCodeService from '../utils/QRCodeService';
 import { saveBase64Image } from '../utils/handleImages';
 import calculateAge from '../utils/CalcAge';
+import TraineeModel from './model';
+import { CityModel, CountryModel, StateModel } from '../location/model';
 
 const qrCodeService = new QRCodeService();
 
 export const getAllTrainees = async (req: Request, res: Response) => {
   try {
-    const trainees = await Trainee.findAll({
-       attributes: { exclude: ['password'] }
-    });  
+    const trainees = await Trainee.findAll(
+      {
+            attributes: { exclude: ['password'] },
+            include: [
+              {
+                model: CountryModel,
+                as: 'country', 
+                attributes: ['id', 'name'] 
+              },
+              {
+                model: StateModel, 
+                as: 'state', 
+                attributes: ['id', 'name']
+              },
+              {
+                model: CityModel,
+                as: 'city',
+                attributes: ['id', 'name']
+              }
+            ]
+          }); 
     return res.status(200).json(trainees);
   } catch (error) {
     return res.status(500).json({ message: 'Error fetching trainees', error });
@@ -20,7 +40,27 @@ export const getAllTrainees = async (req: Request, res: Response) => {
 
 export const getTraineeById = async (req: Request, res: Response) => {
   try {
-    const trainee = await Trainee.findByPk(req.params.id, { attributes: { exclude: ['password'] } });
+    const trainee = await Trainee.findByPk(req.params.id, 
+       {
+            attributes: { exclude: ['password'] },
+            include: [
+              {
+                model: CountryModel,
+                as: 'country', 
+                attributes: ['id', 'name'] 
+              },
+              {
+                model: StateModel, 
+                as: 'state', 
+                attributes: ['id', 'name']
+              },
+              {
+                model: CityModel,
+                as: 'city',
+                attributes: ['id', 'name']
+              }
+            ]
+          }); 
     if (!trainee) {
       return res.status(404).json({ message: 'Trainee not found' });
     }
@@ -32,34 +72,58 @@ export const getTraineeById = async (req: Request, res: Response) => {
 
 export const createTrainee = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, phone, birthDate } = req.body;
+   const { name, email, password, phone, birthDate, gender, countryId, cityId, stateId, nationality } = req.body;
 
-
-    const existingTrainee = await Trainee.findOne({ where: { email } });
-    if (existingTrainee) {
-      return res.status(400).json({ message: 'Trainee with this email already exists' });
+    if (email) {
+      const existingTrainer = await TraineeModel.findOne({ where: { email } });
+      if (existingTrainer) return res.status(400).json({ message: 'Trainer with this email already exists' });
     }
 
-     const passwordHash = await bcrypt.hash(password, 10);
-     const barCode = qrCodeService.generateUniqueQRCodeData('BC');
-     const qrCodeData = qrCodeService.generateUniqueQRCodeData('TRAINEE');
-     const qrCodeImage = await qrCodeService.generateQRCodeUrl(qrCodeData);
 
-    const base64 = req.body.image;
-    const folder = 'trainees';
-    const imageUrl = await saveBase64Image(base64, req, folder);
+    if (countryId) {
+      const country = await CountryModel.findByPk(countryId);
+      if (!country) return res.status(400).json({ message: 'Country not found' });
+    }
+    if (stateId) {
+      const state = await StateModel.findByPk(stateId);
+      if (!state) return res.status(400).json({ message: 'State not found' });
+    }
+    if (cityId) {
+      const city = await CityModel.findByPk(cityId);
+      if (!city) return res.status(400).json({ message: 'City not found' });
+    }
 
-    const trainee = await Trainee.create({
+    
+    const passwordHash = await bcrypt.hash(password, 10);
+    const barCode = qrCodeService.generateUniqueQRCodeData('BC');
+    const qrCodeData = qrCodeService.generateUniqueQRCodeData('TRAINER');
+    const qrCodeImage = await qrCodeService.generateQRCodeUrl(qrCodeData);
+
+    let imageUrl: string | undefined;
+    if (req.body.image) {
+      imageUrl = await saveBase64Image(req.body.image, req, 'trainers');
+    }
+
+    const birthDateObj = birthDate ? new Date(birthDate) : undefined;
+    const age = birthDateObj ? calculateAge(birthDateObj) : undefined;
+
+    const trainee = await TraineeModel.create({
       name,
       email,
       password: passwordHash,
       phone,
-      birthDate: new Date(birthDate),
-      age: calculateAge(new Date(birthDate)),
+      birthDate: birthDateObj,
+      age,
+      gender,
+      countryId,
+      cityId,
+      stateId,
+      nationality,
       image: imageUrl,
-      barCode: barCode,
-      qrCode: qrCodeData
+      barCode,
+      qrCode: qrCodeData,
     });
+
 
     res.status(201).json({
       message: 'Trainee created successfully',

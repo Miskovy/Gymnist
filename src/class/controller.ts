@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { ClassModel, ClassScheduleModel, TrainerClassModel, BookingModel } from './model';
 import { Op, WhereOptions } from 'sequelize';
+import { console } from 'inspector';
+import TrainerModel from '../trainer/model';
 
 // Class Controllers
 export const getAllClasses = async (req: Request, res: Response) => {
@@ -194,30 +196,49 @@ export const createBooking = async (req: Request, res: Response) => {
 // Calendar Controller
 export const getClassCalendar = async (req: Request, res: Response) => {
   try {
-    const { classId, trainerId } = req.query;
+    const { classId, trainerId } = req.params;
     
     let whereClause: WhereOptions = {};
     
-    if (classId) {
-      whereClause.classId = Array.isArray(classId) 
-        ? { [Op.in]: classId.map(id => parseInt(id as string)) }
-        : parseInt(classId as string);
+    // Handle classId from params
+    if (classId && classId !== 'undefined') {
+      const classIdNum = parseInt(classId);
+      if (isNaN(classIdNum)) {
+        return res.status(400).json({ message: 'Invalid class ID' });
+      }
+      whereClause.classId = classIdNum;
     }
     
-    // Handle trainerId filtering
+    // Handle trainerId filtering from params
     let classWhereClause: WhereOptions = {};
-    if (trainerId) {
-      const trainerClasses = await TrainerClassModel.findAll({
-        where: { 
-          trainerId: Array.isArray(trainerId) 
-            ? { [Op.in]: trainerId.map(id => parseInt(id as string)) }
-            : parseInt(trainerId as string)
-        },
-        attributes: ['classId']
+    if (trainerId && trainerId !== 'undefined') {
+      const trainerIdNum = parseInt(trainerId);
+      if (isNaN(trainerIdNum)) {
+        return res.status(400).json({ message: 'Invalid trainer ID' });
+      }
+      
+      // Use the association method instead of raw query
+      const trainer = await TrainerModel.findByPk(trainerIdNum, {
+        include: [{
+          model: ClassModel,
+          as: 'classes',
+          through: { attributes: [] }
+        }]
       });
       
-      const classIds = trainerClasses.map(tc => tc.classId);
-      classWhereClause.id = { [Op.in]: classIds };
+      if (!trainer) {
+        return res.status(404).json({ message: 'Trainer not found' });
+      }
+      
+      const classIds = (trainer as any).classes.map((cls: any) => cls.id);
+      if (classIds.length > 0) {
+        classWhereClause.id = { [Op.in]: classIds };
+      } else {
+        return res.status(200).json({
+          message: 'Class calendar fetched successfully',
+          data: []
+        });
+      }
     }
     
     const schedules = await ClassScheduleModel.findAll({
@@ -225,13 +246,25 @@ export const getClassCalendar = async (req: Request, res: Response) => {
       include: [
         {
           model: ClassModel,
-          where: Object.keys(classWhereClause).length > 0 ? classWhereClause : undefined
+          where: Object.keys(classWhereClause).length > 0 ? classWhereClause : undefined,
+          attributes: ['id', 'name', 'description'],
+          include: [{
+            model: TrainerModel,
+            as: 'trainers',
+            through: { attributes: [] },
+            attributes: ['id', 'name']
+          }]
         }
-      ]
+      ],
+      order: [['date', 'ASC'], ['timeSlot', 'ASC']]
     });
     
-    return res.status(200).json(schedules);
+    return res.status(200).json({
+      message: 'Class calendar fetched successfully',
+      data: schedules
+    });
   } catch (error) {
+    console.error('Error fetching class calendar:', error);
     return res.status(500).json({ message: 'Error fetching class calendar', error });
   }
 };
