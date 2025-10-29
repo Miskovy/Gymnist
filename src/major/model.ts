@@ -7,8 +7,6 @@ interface MajorCreationAttributes extends Optional<Major, 'id'| 'createdAt' | 'u
 export class MajorModel extends Model<Major, MajorCreationAttributes> implements Major {
   public id!: number;
   public name!: string;
-  public description?: string;
-  public isActive!: boolean;
   
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -23,8 +21,7 @@ MajorModel.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      allowNull: false
     },
     createdAt: {
       type: DataTypes.DATE,

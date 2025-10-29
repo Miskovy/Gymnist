@@ -17,8 +17,7 @@ MajorModel.init({
     },
     name: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: false
     },
     createdAt: {
         type: sequelize_1.DataTypes.DATE,

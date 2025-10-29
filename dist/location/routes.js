@@ -58,4 +58,6 @@ router.get('/states/:id', locationController.getStateById);
 router.post('/states', validator_1.validateState, validator_1.validate, locationController.createState);
 router.put('/states/:id', locationController.updateState);
 router.delete('/states/:id', locationController.deleteState);
+// Selection routes
+router.get('/selections', locationController.getAllSelections);
 exports.default = router;

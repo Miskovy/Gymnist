@@ -192,3 +192,17 @@ export const deleteState = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Error deleting state', error });
   }
 };
+
+
+// get all selection
+export const getAllSelections = async (req: Request, res: Response) => {
+  try {
+    const countries = await Country.findAll();
+    const cities = await City.findAll();
+    const states = await State.findAll();
+
+    return res.status(200).json({ countries, cities, states });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching selections', error });
+  }
+};

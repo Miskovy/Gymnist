@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteState = exports.updateState = exports.createState = exports.getStateById = exports.getAllStates = exports.deleteCity = exports.updateCity = exports.createCity = exports.getCityById = exports.getAllCities = exports.deleteCountry = exports.updateCountry = exports.createCountry = exports.getCountryById = exports.getAllCountries = void 0;
+exports.getAllSelections = exports.deleteState = exports.updateState = exports.createState = exports.getStateById = exports.getAllStates = exports.deleteCity = exports.updateCity = exports.createCity = exports.getCityById = exports.getAllCities = exports.deleteCountry = exports.updateCountry = exports.createCountry = exports.getCountryById = exports.getAllCountries = void 0;
 const model_1 = require("./model");
 // Country Controllers
 const getAllCountries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -218,3 +218,16 @@ const deleteState = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.deleteState = deleteState;
+// get all selection
+const getAllSelections = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const countries = yield model_1.Country.findAll();
+        const cities = yield model_1.City.findAll();
+        const states = yield model_1.State.findAll();
+        return res.status(200).json({ countries, cities, states });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Error fetching selections', error });
+    }
+});
+exports.getAllSelections = getAllSelections;
