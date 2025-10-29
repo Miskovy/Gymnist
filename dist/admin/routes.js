@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const controller_1 = require("./controller");
 const validator_1 = require("./validator");
+const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const router = express_1.default.Router();
+router.use(verifyToken_1.default);
 // Privilege routes
 router.post('/privileges', controller_1.createPrivilege);
 router.get('/privileges', controller_1.getAllPrivileges);

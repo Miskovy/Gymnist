@@ -15,8 +15,11 @@ import {
   validateAdminId,
   validatePrivileges
 } from './validator';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 // Privilege routes
 router.post('/privileges', createPrivilege);
