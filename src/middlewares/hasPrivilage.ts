@@ -4,8 +4,7 @@ import { AdminPrivilegeModel, PrivilegeModel } from "../admin/model";
 export const hasPrivilege = (requiredName: string, requiredAction: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Assuming you store admin ID in req.user after authentication
-      const adminId = (req as any).user?.id;
+      const adminId = (req as any).currentUser?.id;
 
       if (!adminId) {
         return res.status(401).json({ error: "Unauthorized" });

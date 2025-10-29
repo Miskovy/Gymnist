@@ -13,6 +13,8 @@ import classRoutes from './class/routes';
 import subscriptionRoutes from './subscription/routes';
 import majorRoutes from './major/routes';
 import roomRoutes from './room/routes';
+import adminRoutes from './admin/routes';
+import authRoutes from './auth/routes';
 
 const app: Express = express();
 
@@ -34,6 +36,8 @@ app.use('/api/classes', classRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/majors', majorRoutes);
 app.use('/api/rooms', roomRoutes);
+app.use('/api/admins', adminRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

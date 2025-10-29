@@ -6,7 +6,8 @@ import {
   updateAdmin,
   deleteAdmin,
   addPrivilegesAdmin,
-  getAllPrivileges
+  getAllPrivileges,
+  createPrivilege
 } from './controller';
 import {
   validateAdmin,
@@ -17,15 +18,18 @@ import {
 
 const router = express.Router();
 
-// Admin routes
-router.get('/admins', getAllAdmins);
-router.get('/admins/:id', validateAdminId, getAdmin);
-router.post('/admins', validateAdmin, createAdmin);
-router.put('/admins/:id', validateAdminId, validateAdminUpdate, updateAdmin);
-router.delete('/admins/:id', validateAdminId, deleteAdmin);
-
 // Privilege routes
+router.post('/privileges', createPrivilege);
 router.get('/privileges', getAllPrivileges);
-router.post('/admins/:id/privileges', validateAdminId, validatePrivileges, addPrivilegesAdmin);
+router.post('/:id/privileges', validateAdminId, validatePrivileges, addPrivilegesAdmin);
+
+// Admin routes
+router.get('/', getAllAdmins);
+router.get('/:id', validateAdminId, getAdmin);
+router.post('/', validateAdmin, createAdmin);
+router.put('/:id', validateAdminId, validateAdminUpdate, updateAdmin);
+router.delete('/:id', validateAdminId, deleteAdmin);
+
+
 
 export default router;

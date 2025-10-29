@@ -143,7 +143,6 @@ AdminPrivilegeModel.init(
   }
 );
 
-// Define associations
 AdminModel.belongsToMany(PrivilegeModel, { 
   through: AdminPrivilegeModel,
   foreignKey: 'adminId',
@@ -155,5 +154,8 @@ PrivilegeModel.belongsToMany(AdminModel, {
   foreignKey: 'privilegeId',
   otherKey: 'adminId'
 });
+
+AdminPrivilegeModel.belongsTo(AdminModel, { foreignKey: 'adminId' });
+AdminPrivilegeModel.belongsTo(PrivilegeModel, { foreignKey: 'privilegeId' });
 
 export { AdminModel, PrivilegeModel, AdminPrivilegeModel };
