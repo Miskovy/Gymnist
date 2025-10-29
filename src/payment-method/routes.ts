@@ -1,8 +1,11 @@
 import express from 'express';
 import * as paymentMethodController from './controller';
 import { validatePaymentMethod, validate } from './validator';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 router.get('/', paymentMethodController.getAllPaymentMethods);
 router.get('/:id', paymentMethodController.getPaymentMethodById);

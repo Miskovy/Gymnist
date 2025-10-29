@@ -1,8 +1,11 @@
 import express from 'express';
 import * as packageController from './controller';
 import { validatePackage, validate } from './validator';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 router.get('/', packageController.getAllPackages);
 router.get('/:id', packageController.getPackageById);

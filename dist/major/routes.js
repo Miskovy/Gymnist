@@ -38,7 +38,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const majorController = __importStar(require("./controller"));
+const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const router = express_1.default.Router();
+router.use(verifyToken_1.default);
 router.get('/', majorController.getAllMajors);
 router.get('/:id', majorController.getMajorById);
 router.post('/', majorController.createMajor);

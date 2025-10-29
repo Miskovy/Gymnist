@@ -39,7 +39,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const classController = __importStar(require("./controller"));
 const validator = __importStar(require("./validator"));
+const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const router = express_1.default.Router();
+router.use(verifyToken_1.default);
 router.get('/calendar/:classId?/:trainerId?', validator.validateCalendarParams, validator.handleValidationErrors, classController.getClassCalendar);
 // Class routes
 router.get('/', classController.getAllClasses);

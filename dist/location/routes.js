@@ -39,7 +39,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const locationController = __importStar(require("./controller"));
 const validator_1 = require("./validator");
+const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const router = express_1.default.Router();
+router.use(verifyToken_1.default);
 // Country routes
 router.get('/countries', locationController.getAllCountries);
 router.get('/countries/:id', locationController.getCountryById);

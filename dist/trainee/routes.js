@@ -39,7 +39,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const traineeController = __importStar(require("./controller"));
 const validator = __importStar(require("./validator"));
+const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const router = express_1.default.Router();
+router.use(verifyToken_1.default);
 // Get all trainees
 router.get('/', traineeController.getAllTrainees);
 // Get trainee by ID

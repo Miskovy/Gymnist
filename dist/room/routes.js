@@ -38,8 +38,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const roomController = __importStar(require("./controller"));
+const verifyToken_1 = __importDefault(require("../middlewares/verifyToken"));
 const router = express_1.default.Router();
 // Room routes
+router.use(verifyToken_1.default);
 router.get('/', roomController.getAllRooms);
 router.get('/:id', roomController.getRoomById);
 router.post('/', roomController.createRoom);

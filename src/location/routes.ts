@@ -1,8 +1,11 @@
 import express from 'express';
 import * as locationController from './controller';
 import { validateCountry, validateCity, validateState, validate } from './validator';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 // Country routes
 router.get('/countries', locationController.getAllCountries);

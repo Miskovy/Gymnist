@@ -1,9 +1,11 @@
 import express from 'express';
 import * as roomController from './controller';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
 
 // Room routes
+router.use(verifyToken);
 router.get('/', roomController.getAllRooms);
 router.get('/:id', roomController.getRoomById);
 router.post('/', roomController.createRoom);

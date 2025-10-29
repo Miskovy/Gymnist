@@ -1,8 +1,11 @@
 import express from 'express';
 import * as classController from './controller';
 import * as validator from './validator';
+import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 router.get(
   '/calendar/:classId?/:trainerId?', 
