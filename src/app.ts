@@ -15,6 +15,7 @@ import majorRoutes from './major/routes';
 import roomRoutes from './room/routes';
 import adminRoutes from './admin/routes';
 import authRoutes from './auth/routes';
+import rentRoutes from './rent/routes';
 
 const app: Express = express();
 
@@ -38,6 +39,7 @@ app.use('/api/majors', majorRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/rents', rentRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
