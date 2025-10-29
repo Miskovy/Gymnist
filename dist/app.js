@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const path_1 = __importDefault(require("path"));
+const errorMiddleware_1 = __importDefault(require("./middlewares/errorMiddleware"));
 // Import routes
 const routes_1 = __importDefault(require("./trainee/routes"));
 const routes_2 = __importDefault(require("./trainer/routes"));
@@ -40,11 +41,5 @@ app.use('/api/rooms', routes_9.default);
 app.use('/api/admins', routes_10.default);
 app.use('/api/auth', routes_11.default);
 app.use('/api/rents', routes_12.default);
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        status: 'error',
-        message: 'Something went wrong!'
-    });
-});
+app.use(errorMiddleware_1.default);
 exports.default = app;

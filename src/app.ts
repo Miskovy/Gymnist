@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import path from 'path';
+import globalError from './middlewares/errorMiddleware';
 
 // Import routes
 import traineeRoutes from './trainee/routes';
@@ -41,12 +42,6 @@ app.use('/api/admins', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/rents', rentRoutes);
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({
-    status: 'error',
-    message: 'Something went wrong!'
-  });
-});
+app.use(globalError);
 
 export default app;
